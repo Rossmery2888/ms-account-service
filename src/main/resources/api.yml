@@ -1,0 +1,230 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Customer Service API
+servers:
+  - url: http://localhost:8585
+paths:
+  /customers:
+    get:
+      summary: "Obtener lista de clientes"
+      description: "Retorna una lista de todos los clientes registrados."
+      operationId: getAllCustomers
+      tags:
+        - "Clientes"
+      responses:
+        '200':
+          description: "Lista de clientes obtenida exitosamente."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerResponse"
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      summary: "Crear un nuevo cliente"
+      description: "Agrega un nuevo cliente al sistema."
+      operationId: createCustomer
+      tags:
+        - "Clientes"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerRequest"
+      responses:
+        '201':
+          description: "Cliente creado exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+        '400':
+          description: "Solicitud inválida."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{customerId}:
+    get:
+      summary: "Obtener información de un cliente"
+      description: "Devuelve los detalles de un cliente específico."
+      operationId: getCustomerById
+      tags:
+        - "Clientes"
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: "ID único del cliente"
+          schema:
+            type: string
+            example: "12345"
+      responses:
+        '200':
+          description: "Información del cliente obtenida exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+        '404':
+          description: "Cliente no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    put:
+      summary: "Actualizar información de un cliente"
+      description: "Actualiza los datos de un cliente específico."
+      operationId: updateCustomer
+      tags:
+        - "Clientes"
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: "ID único del cliente"
+          schema:
+            type: string
+            example: "12345"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerRequest"
+      responses:
+        '200':
+          description: "Cliente actualizado exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+        '400':
+          description: "Solicitud inválida."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '404':
+          description: "Cliente no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      summary: "Eliminar un cliente"
+      description: "Elimina a un cliente del sistema utilizando su ID."
+      operationId: deleteCustomer
+      tags:
+        - "Clientes"
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: "ID único del cliente"
+          schema:
+            type: string
+            example: "12345"
+      responses:
+        '204':
+          description: "Cliente eliminado exitosamente. No se devuelve contenido."
+        '404':
+          description: "Cliente no encontrado."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: "Error interno del servidor."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    CustomerRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+      properties:
+        firstName:
+          type: string
+          description: "Nombre del cliente"
+          example: "Juan"
+        lastName:
+          type: string
+          description: "Apellido del cliente"
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          description: "Correo electrónico del cliente"
+          example: "juan.perez@email.com"
+        phone:
+          type: string
+          description: "Número de teléfono del cliente"
+          example: "123456789"
+
+    CustomerResponse:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: "ID único del cliente"
+          example: "12345"
+        firstName:
+          type: string
+          example: "Juan"
+        lastName:
+          type: string
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan.perez@email.com"
+        phone:
+          type: string
+          example: "123456789"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Not Found"
+        message:
+          type: string
+          example: "El cliente con el ID proporcionado no existe."
