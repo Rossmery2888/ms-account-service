@@ -1,5 +1,6 @@
 package com.example.msaccountservice.dto;
 
+import com.example.msaccountservice.model.enums.CustomerProfile;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,8 +14,12 @@ public class SavingsAccountDTO {
     @NotBlank
     private String customerId;
     @NotNull
+    private CustomerProfile customerProfile;
+    @NotNull
     @Positive
     private BigDecimal balance;
     @NotNull
     private Integer monthlyTransactionLimit;
+    private BigDecimal minimumDailyBalance;
+    private Boolean hasRequiredCreditCard;
 }
