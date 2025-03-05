@@ -1,6 +1,42 @@
 spring:
   application:
-    name: customer-service
+    name: ms-account
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/bankapp
+  config:
+    import: "optional:configserver:"
   cloud:
     config:
       uri: http://localhost:8888
+      fail-fast: true
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com.nttdata.bankapp: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+
+# Cliente URLs
+app:
+  customer-service-url: http://localhost:8081
+
+# Actuator configuration for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# OpenAPI configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
